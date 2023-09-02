@@ -1,0 +1,227 @@
+---
+title: "Data 605 HW 1"
+author: "Mohamed Hassan-El Serafi"
+date: "`r Sys.Date()`"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE)
+```
+
+
+```{r}
+library(animation)
+library(ggplot2)
+library(gganimate)
+library(gifski)
+library(knitr)
+library(anim.plots)
+library(tidyverse)
+```
+
+
+
+
+```{r}
+# Plot M
+
+x <- c(rep(-1.5,500),
+       seq(-1,-1.5,length.out=500), 
+       seq(-1,-0.5,length.out=500),
+       #rep(1,500), 
+       #seq(2,1,length.out=500), 
+       rep(-0.5,500))
+y <- c(seq(-2,2,length.out=500), 
+       seq(-2,2,length.out=500), 
+       seq(-2,2,length.out=500), 
+       seq(-2,2,length.out=500)) 
+z=rbind(x,y)
+plot(y~x, xlim=c(-3,3), ylim=c(-3,3))
+```
+
+
+
+```{r}
+# Plot H
+x=c(rep(0,500),
+    seq(0,1,length.out=1000), 
+    rep(1,500))
+y=c(seq(-2,2,length.out=500),
+    rep(0,1000), 
+    seq(-2,2,length.out=500))
+z=rbind(x,y)
+plot(y~x, 
+     xlim=c(-3,3), 
+     ylim=c(-3,3))
+```
+
+
+
+
+
+
+
+
+```{r}
+# Plot MH together
+x <- c(rep(-1.5,500),
+       seq(-1,-1.5,length.out=500), 
+       seq(-1,-0.5,length.out=500),
+       #rep(1,500), 
+       #seq(2,1,length.out=500), 
+       rep(-0.5,500),
+       rep(0,500),
+       seq(0,1,length.out=1000), 
+       rep(1,500))
+y <- c(seq(-2,2,length.out=500), 
+       seq(-2,2,length.out=500), 
+       seq(-2,2,length.out=500), 
+       seq(-2,2,length.out=500),
+       seq(-2,2,length.out=500),
+       rep(0,1000), 
+       seq(-2,2,length.out=500))
+       #rep(-2,500),
+       #seq(-2,1,length.out=500))
+z=rbind(x,y)
+plot(y~x, xlim=c(-3,3), ylim=c(-3,3))
+```
+
+
+```{r}
+# Write R code that will left multiply (%*%) a square matrix (x) against each of the vectors of points (y). Initially, that square matrix will be the Identity matrix.
+
+identity_matrix <- function(x,y) {
+  x %*% y
+}
+
+identity_matrix(matrix(rep(seq(1,3, length.out=3), 3), nrow=3, ncol=3), diag(3))
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Shear
+
+```{r, animation.hook="gifski", interval=0.2, fig.height=8, fig.width=8}
+x11()
+for (i in seq(0,1,length.out=20)) {
+  z1<-apply(z,2,function(x) identity_matrix(x,matrix(c(1,i,0,1),nrow=2,ncol=2)))
+   plot(z1[2,]~z1[1,], xlim=c(-3,3), ylim=c(-3,3), col='blue',
+        main="Shear Transformation", xlab="X", ylab = "Y",
+        col.main="red", col.lab="navy")
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Scaling
+
+
+```{r, animation.hook='gifski', interval=0.2, fig.height=8, fig.width=8}
+x11()
+for (i in seq(0,1,length.out=20)) {
+  z1<-apply(z,2,function(x) identity_matrix(x,matrix(c(i,0,0,i),nrow=2,ncol=2)))
+   plot(z1[2,]~z1[1,], xlim=c(-3,3), ylim=c(-3,3), col='blue',
+        main="Scaling Transformation", xlab="X", ylab = "Y",
+        col.main="red", col.lab="navy")
+}
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Rotation
+
+
+```{r, animation.hook='gifski', interval=0.2, fig.height=8, fig.width=8}
+x11()
+for (i in seq(0,pi*3,length.out=20)) {
+  z1<-apply(z,2,function(x) identity_matrix(x,matrix(c(cos(i),-sin(i),sin(i),cos(i)),nrow=2,ncol=2)))
+   plot(z1[2,]~z1[1,], xlim=c(-3,3), ylim=c(-3,3), col='blue',
+        main="Rotation Transformation", xlab="X", ylab = "Y",
+        col.main="red", col.lab="navy")
+}
+```
+
+
+
+## Projection
+
+```{r, animation.hook='gifski', interval=0.2, fig.height=8, fig.width=8}
+x11()
+for (i in seq(0,2*pi,length.out=20)) {
+  tmpz<-rbind(z,rep(0,ncol(z)))
+  z1<-apply(tmpz,2,function(x) identity_matrix(x,matrix(c(1,0,0,0,cos(i),-sin(i),0,sin(i),cos(i)),nrow=3,ncol=3)))
+   plot(z1[2,]~z1[1,], xlim=c(-3,3), ylim=c(-3,3), col='blue',
+        main="Projection Transformation", xlab="X", ylab = "Y",
+        col.main="red", col.lab="navy")
+}
+```
+
+
+
+
+
+
